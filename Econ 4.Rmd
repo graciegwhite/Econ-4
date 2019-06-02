@@ -213,6 +213,13 @@ demand_plot <- ggplot(data.frame(x = c(0, 350))) +
 demand_plot
 
 ```
+Free Market Qs
+Sector A: Q = 90
+Sector B:Q = 100
+Sector C:Q = 110
+Sector D:Q = 150
+
+
 
 ###3. 
  Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from
@@ -222,9 +229,22 @@ For each of the policy options listed below, derive:
 
 a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus
 reducing total emissions from 600 down to 300).
-(1) the total cost of meeting the target in country X,
+Current carbon emissions in the sectors are: (A=180, B=200, C=220)
+(1) the total cost of meeting the target in country X
+
+Capped emmsions:
+A:80
+B:100
+C:120
+
+
+
+
 (2) the cost (or benefit) to each sector
-(3) the tax revenue generated.
+
+(3) the tax revenue generated. 
+
+- Tax Revenue = 0
 
 b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to
 find the tax that accomplishes the desired reduction.
