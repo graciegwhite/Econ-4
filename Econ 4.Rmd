@@ -29,7 +29,8 @@ notes:
  Sectors A, B, and C are in country X. Sector D is in a different country, Y.
  Prices are in $/ton and quantities are in tons.
 
-1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression
+###1. 
+Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression
 analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give
 you a model of the marginal cost of abatement function for each sector. How well do your models fit
 the data for each sector? You may need to experiment with different functional forms. Produce a plot
@@ -121,4 +122,120 @@ curve_plot
 
 ```
 
+###2. 
+Using these models and the current level of carbon emissions, derive each sector’s demand curve for
+carbon emissions. In other words, how much would each sector be willing to pay for the right to
+pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to
+pay the most for the first unit of carbon emissions?
 
+
+```{r}
+
+#Sector A - Current Emissions = 180
+
+quant_a <- seq(0,180,by=10)
+curve_d_a <- function(q){
+  (slope_a*(180-q)) + int_a
+}
+demand_a <- curve_d_a(quant_a)
+curve(curve_d_a, from=0, to=180, xlab = "x", ylab = "y") #looks like it worked. Sweet. 
+demand_a 
+
+#Sector B - Current Emissions = 200
+quant_b <- seq(0,200,by=10)
+curve_d_b <- function(q){
+  (slope_b*(200-q)) + int_b
+}
+demand_b <- curve_d_b(quant_b)
+curve(curve_d_b, from=0, to=200, xlab = "x", ylab = "y") #looks like it worked. Sweet. 
+demand_b 
+
+#Sector C - Current Emissions = 220
+
+quant_c <- seq(0,220,by=10)
+curve_d_c <- function(q){
+  (slope_c*(200-q)) + int_c
+}
+demand_c <- curve_d_c(quant_c)
+curve(curve_d_c, from=0, to=220, xlab = "x", ylab = "y") #looks like it worked. Sweet. 
+demand_c 
+
+#Sector D - Current Emissions = 300
+
+quant_d <- seq(0,300,by=10)
+curve_d_d <- function(q){
+  (slope_d*(200-q)) + int_d
+}
+demand_d <- curve_d_d(quant_d)
+curve(curve_d_d, from=0, to=300, xlab = "x", ylab = "y") #looks like it worked. Sweet. 
+demand_d 
+
+
+
+```
+
+
+Sector A:  $Price~of~Emissions = `r slope_a`*(180-q) + `r int_a`$ 
+
+ - Willingness to Pay for First Unit = \$95.2    
+ 
+Sector B: $Price~of~Emissions = `r slope_b`*(200-q) + `r int_b`$
+ 
+- Willingness to Pay for First Unit = \$49.12 
+
+Sector C: $Price~of~Emissions = `r slope_c`*(220-q) + `r int_c`$
+
+- Willingness to Pay for First Unit = \$145.11
+
+Sector D: $Price~of~Emissions = `r slope_d`*(300-q) + `r int_d`$
+
+- Willingness to Pay for First Unit = \$61.67 
+
+
+Sector C is willing to pay the most. 
+
+```{r, echo=FALSE}
+
+demand_plot <- ggplot(data.frame(x = c(0, 350))) + 
+  stat_function(fun = curve_d_a, aes(color = "A")) +
+  stat_function(fun = curve_d_b, aes(color = "B")) +
+  stat_function(fun = curve_d_c, aes(color = "C")) +
+  stat_function(fun = curve_d_d, aes(color = "D")) +
+  scale_y_continuous(limits= c(-10,150), expand = c(0,0)) +
+  scale_x_continuous(limits= c(0, 350), expand = c(0,0)) + 
+  labs(fill = "", color = "Sectors") + 
+  xlab("\n Carbon Abatement (ton)") + 
+  ylab("Marginal Cost \n($/ton) \n") + 
+  theme_classic() +
+  ggtitle("Demand: Marginal Cost of Abatement\n") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(angle=0, hjust = 0.5, vjust = 0.5)) 
+demand_plot
+
+```
+
+###3. 
+ Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from
+carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement).
+Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half.
+For each of the policy options listed below, derive: 
+
+a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus
+reducing total emissions from 600 down to 300).
+(1) the total cost of meeting the target in country X,
+(2) the cost (or benefit) to each sector
+(3) the tax revenue generated.
+
+b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to
+find the tax that accomplishes the desired reduction.
+(1) the total cost of meeting the target in country X,
+(2) the cost (or benefit) to each sector
+(3) the tax revenue generated.
+
+c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions
+minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three
+sectors are allowed to trade with each other. You will need to derive the outcome of that
+trading.
+(1) the total cost of meeting the target in country X,
+(2) the cost (or benefit) to each sector
+(3) the tax revenue generated.
