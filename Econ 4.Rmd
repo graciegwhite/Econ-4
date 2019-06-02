@@ -1,0 +1,124 @@
+---
+title: "Econ 4"
+author: "Gracie White"
+date: "6/2/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+
+library(tidyverse)
+library(kableExtra)
+
+
+carbon <- read_csv("HW4DATA.csv")
+
+
+
+
+```
+The data contain
+estimates of the marginal cost of carbon abatement for four economic sectors (sectors A, B, C, and D). A few
+notes:
+ Current carbon emissions in the sectors are: (A=180, B=200, C=220, and D=300).
+ Sectors A, B, and C are in country X. Sector D is in a different country, Y.
+ Prices are in $/ton and quantities are in tons.
+
+1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression
+analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give
+you a model of the marginal cost of abatement function for each sector. How well do your models fit
+the data for each sector? You may need to experiment with different functional forms. Produce a plot
+of the estimated marginal abatement cost functions in all four sectors (this plot should go in your
+memo).
+
+
+```{r, echo=FALSE}
+
+#figure out appropriate model forms with basic plots 
+
+graph_a <- ggplot(carbon, aes(x = Abatement, y = MC_A)) +
+  geom_point()
+graph_a
+
+#Sector A looks linear, perhaps slightly logistic
+#I'll do a logistic model just because 
+
+model_A <- glm(Abatement ~ MC_A, data = carbon)
+summary(model_A)
+#I think using linear throughout will just be easier. Sam said that was fine and I can't be bothered to go above and beyond rn. 
+
+a_lm <- lm(MC_A ~ Abatement, data=carbon)
+# Store coefficients of regression
+int_a <- a_lm$coefficients[1]
+slope_a <- a_lm$coefficients[2]
+
+#store function
+curve_a <- function(x){int_a + slope_a*x}
+
+
+graph_b <- ggplot(carbon, aes(x = Abatement, y = MC_B)) +
+  geom_point()
+graph_b
+#Linear Enough 
+b_lm <- lm(MC_B ~ Abatement, data = carbon)
+int_b <- b_lm$coefficients[1]
+slope_b <- b_lm$coefficients[2]
+#store function
+curve_b <- function(x){int_b + slope_b*x}
+
+graph_c <- ggplot(carbon, aes(x = Abatement, y = MC_C)) +
+  geom_point()
+graph_c
+#linear enough, perhaps slightly exponential
+c_lm <- lm(MC_C ~ Abatement, data = carbon)
+int_c <- c_lm$coefficients[1]
+slope_c <- c_lm$coefficients[2]
+#store function
+curve_c <- function(x){int_c + slope_c*x}
+
+graph_d <- ggplot(carbon, aes(x = Abatement, y = MC_D)) +
+  geom_point()
+graph_d
+#Linear enough, I'm over it.
+d_lm <- lm(MC_D ~ Abatement, data = carbon)
+int_d <- d_lm$coefficients[1]
+slope_d <- d_lm$coefficients[2]
+#store function
+curve_d <- function(x){int_d + slope_d*x}
+
+
+
+```
+
+$Marginal~Cost~Abatement~Sector~A = `r slope_a`*q + `r int_a`$ 
+$Marginal~Cost~Abatement~Sector~B = `r slope_b`*q + `r int_b`$
+$Marginal~Cost~Abatement~Sector~C = `r slope_c`*q + `r int_c`$
+$Marginal~Cost~Abatement~Sector~D = `r slope_d`*q + `r int_d`$
+
+
+```{r, echo=FALSE}
+
+curve_plot <- ggplot(data.frame(x = c(0, 350))) + 
+  stat_function(fun = curve_a, aes(color = "A")) +
+  stat_function(fun = curve_b, aes(color = "B")) +
+  stat_function(fun = curve_c, aes(color = "C")) +
+  stat_function(fun = curve_d, aes(color = "D")) +
+  scale_y_continuous(limits= c(-10,100), expand = c(0,0)) +
+  scale_x_continuous(limits= c(0, 350), expand = c(0,0)) + 
+  labs(fill = "", color = "Sectors") + 
+  xlab("\n Carbon Abatement (ton)") + 
+  ylab("Marginal Cost \n($/ton) \n") + 
+  theme_classic() +
+  ggtitle("Marginal Cost of Abatement\n") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(angle=0, hjust = 0.5, vjust = 0.5)) 
+curve_plot
+
+```
+
+
