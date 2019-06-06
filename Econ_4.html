@@ -310,28 +310,55 @@ curve(curve_d_d, from=0, to=300, xlab = &quot;x&quot;, ylab = &quot;y&quot;) #lo
 <div id="section-2" class="section level3">
 <h3>3.</h3>
 <p>Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half. For each of the policy options listed below, derive:</p>
-<ol style="list-style-type: lower-alpha">
-<li>Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total emissions from 600 down to 300). Current carbon emissions in the sectors are: (A=180, B=200, C=220)</li>
-</ol>
-<ol style="list-style-type: decimal">
-<li>the total cost of meeting the target in country X</li>
-</ol>
-<p>Capped emmsions: A:80 B:100 C:120</p>
-<ol start="2" style="list-style-type: decimal">
-<li><p>the cost (or benefit) to each sector</p></li>
-<li><p>the tax revenue generated.</p></li>
-</ol>
-<ul>
-<li>Tax Revenue = 0</li>
-</ul>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.</li>
-</ol>
-<ol style="list-style-type: decimal">
-<li>the total cost of meeting the target in country X,</li>
-<li>the cost (or benefit) to each sector</li>
-<li>the tax revenue generated.</li>
-</ol>
+<div id="a.-cap-on-carbon." class="section level4">
+<h4>a. Cap on carbon.</h4>
+<p>Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total emissions from 600 down to 300). Current carbon emissions in the sectors are: (A=180, B=200, C=220)</p>
+<pre class="r"><code>#Sector A
+costa_100 &lt;- curve_a(100) #49 mc
+areaa_100 &lt;- integrate(curve_a, lower = 0, upper = 100)$value
+
+#Sector B
+costb_100 &lt;- curve_b(100) #29.2 mc
+areab_100 &lt;- integrate(curve_b, lower = 0, upper = 100)$value
+
+#Sector C
+costc_100 &lt;- curve_c(100) #66.7 mc
+areac_100 &lt;- integrate(curve_c, lower = 0, upper = 100)$value
+
+#Sector D not part of this Q
+
+
+#Total Cost:
+tc_100 &lt;- areaa_100 + areab_100 + areac_100 #6698.88</code></pre>
+<div id="the-total-cost-of-meeting-the-target-in-country-x" class="section level5">
+<h5>(1) the total cost of meeting the target in country X</h5>
+<p><span class="math inline">\(Total~Cost = 6698.882897\)</span></p>
+</div>
+<div id="the-cost-or-benefit-to-each-sector" class="section level5">
+<h5>(2) the cost (or benefit) to each sector</h5>
+<p><span class="math inline">\(Cost~to~A = 2020\)</span></p>
+<p><span class="math inline">\(Cost~to~B = 1925\)</span></p>
+<p><span class="math inline">\(Cost~to~C = 2754\)</span></p>
+</div>
+<div id="the-tax-revenue-generated." class="section level5">
+<h5>(3) the tax revenue generated.</h5>
+<p>Tax Revenue = 0</p>
+</div>
+</div>
+<div id="b.-tax-on-carbon." class="section level4">
+<h4>b. Tax on carbon.</h4>
+<p>To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.</p>
+<p>Emission functions: <span class="math display">\[Aggregate MC= 616.74 - Emissions / 8\]</span> <span class="math display">\[Abatement_A = ( 95.75 - MC)/0.58 \]</span> <span class="math display">\[Abatement_B = (49.32-MC)/ 0.2 \]</span> <span class="math display">\[Abatement_C =(159.94-MC)/0.78 \]</span> <span class="math display">\[Abatement_D = (87.69 - MC)/0.26\]</span> See Table!</p>
+<pre><code>##                 Units abated     Cost       Tax
+## Sector A            96.82328 1351.350  3833.476
+## Sector B            48.63750 3918.915  1925.680
+## Sector C           154.29167 1004.850  6108.793
+## Total Country X    299.75244 6275.115 11867.949</code></pre>
+<pre><code>##                 Units abated    Cost      Tax
+## Sector A               96.82 1351.35  3833.48
+## Sector B               48.64 3918.92  1925.68
+## Sector C              154.29 1004.85  6108.79
+## Total Country X       299.75 6275.12 11867.95</code></pre>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.</li>
 </ol>
@@ -340,6 +367,93 @@ curve(curve_d_d, from=0, to=300, xlab = &quot;x&quot;, ylab = &quot;y&quot;) #lo
 <li>the cost (or benefit) to each sector</li>
 <li>the tax revenue generated.</li>
 </ol>
+<p>Equimarginal principle: firms will trade until the cost of abatement is the same between all 3 sectors. The goal is to abate 300 units of emissions, so the cost of abatement that meets the equimarginal principle is $39.59. Table below summarizes results.</p>
+<pre><code>##                 Units abated      Cost
+## Sector A            96.82328  6562.803
+## Sector B            48.63750  2162.241
+## Sector C           154.29167 15393.101
+## Total Country X    299.75244 24118.145</code></pre>
+<pre><code>##                 Units abated    Cost
+## Sector A                96.8  6562.8
+## Sector B                48.6  2162.2
+## Sector C               154.3 15393.1
+## Total Country X        299.8 24118.1</code></pre>
+</div>
+</div>
+<div id="section-3" class="section level3">
+<h3>4.</h3>
+<p>Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C.</p>
+<div id="are-there-any-incentives-for-country-y-to-enter-country-xs-carbon-market-and-to-thus-place-a-voluntary-cap-on-its-emissions" class="section level5">
+<h5>Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions?</h5>
+<p>Sector Y might benefit from entering the international carbon market since their abatement costs are lower than Sectors A and C, so it could potentially be profitable.</p>
+</div>
+<div id="are-there-any-incentives-for-country-x-to-try-to-attract-country-y-into-its-market" class="section level5">
+<h5>Are there any incentives for country X to try to attract country Y into its market?</h5>
+<p>Sector B would benefit from country Y entering the international carbon market since their abatements costs are lower, so it could potentially be profitable.</p>
+</div>
+</div>
+<div id="section-4" class="section level3">
+<h3>5.</h3>
+<p>Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.</p>
+<div id="a.-in-a-carbon-cap-and-trade-market-that-only-covers-sectors-in-country-x-how-much-local-air-pollution-would-you-expect-in-country-x-in-country-y" class="section level4">
+<h4>a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?</h4>
+<p>Both are emitting 300 tons, so both countires would also emit 300 tons of air polluntion.</p>
+</div>
+<div id="b.-if-country-y-enters-the-carbon-market-for-country-x-as-in-question-4-above-how-much-local-pollution-will-there-be-in-country-x-and-country-y" class="section level4">
+<h4>b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?</h4>
+<p><span class="math inline">\(Aggregate MC= 954.01 - Abatement / 11.85\)</span></p>
+<pre class="r"><code>MC&lt;-(954.01-600) /11.85
+MC #29.87</code></pre>
+<pre><code>## [1] 29.87426</code></pre>
+<pre class="r"><code>300-222 #78</code></pre>
+<pre><code>## [1] 78</code></pre>
+<pre class="r"><code>(87.69 - 39.59)/0.26</code></pre>
+<pre><code>## [1] 185</code></pre>
+<pre class="r"><code>abatea&lt;-(95.75 - MC)/0.58 
+abateb&lt;-(49.32-MC)/ 0.2
+abatec&lt;-(159.94-MC)/0.78
+abated&lt;-(87.69 - MC)/0.26
+
+totalabate&lt;-sum(abatea, abateb, abatec, abated)
+abate&lt;-rbind(abatea, abateb, abatec, abated, totalabate)
+abate</code></pre>
+<pre><code>##                 [,1]
+## abatea     113.57886
+## abateb      97.22869
+## abatec     166.75095
+## abated     222.36822
+## totalabate 599.92672</code></pre>
+<pre class="r"><code>costa&lt;-(abatea*MC)+(abatea*(95.97-MC)*0.5)
+costb&lt;-(abateb*MC)+(abateb*(49.32-MC)*0.5)
+costc&lt;-(abatec*MC)+(abatec*(159.94-MC)*0.5)
+costd&lt;-(abated*MC)+(abated*(87.69-MC)*0.5)
+
+totalcost&lt;-sum(costa, costb, costc, costd)
+cost&lt;-rbind(costa, costb, costc, costd, totalcost)
+
+part5&lt;- cbind(abate, cost)
+colnames(part5)=c(&quot;Units abated&quot;, &quot;Cost&quot;)
+row.names(part5)=c(&quot;Sector A&quot;, &quot;Sector B&quot;, &quot;Sector C&quot;, &quot;Sector D&quot;,&quot;Total&quot;)
+part5</code></pre>
+<pre><code>##          Units abated      Cost
+## Sector A    113.57886  7146.624
+## Sector B     97.22869  3849.977
+## Sector C    166.75095 15825.854
+## Sector D    222.36822 13071.278
+## Total       599.92672 39893.733</code></pre>
+<pre class="r"><code>round(part5,2)</code></pre>
+<pre><code>##          Units abated     Cost
+## Sector A       113.58  7146.62
+## Sector B        97.23  3849.98
+## Sector C       166.75 15825.85
+## Sector D       222.37 13071.28
+## Total          599.93 39893.73</code></pre>
+<p>If country Y enters the international carbon market this would change the cost of abatement to $29.87. Country Y would pollute 222 tons and Country X would pollute 378, and they same amount of emiisions. 600 tons in total, but more in Country X and less than Country Y. Country Y is better off in this regard.</p>
+</div>
+<div id="c.-what-advice-can-you-give-country-x-and-country-y-about-the-desirability-of-allowing-international-trade-of-carbon-emissions-credits" class="section level4">
+<h4>c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?</h4>
+<p>Not a great deal for country y, but it could be a good deal for country Y.</p>
+</div>
 </div>
 
 

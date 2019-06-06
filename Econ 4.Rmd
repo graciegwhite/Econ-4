@@ -18,9 +18,6 @@ library(kableExtra)
 
 carbon <- read_csv("HW4DATA.csv")
 
-
-
-
 ```
 The data contain
 estimates of the marginal cost of carbon abatement for four economic sectors (sectors A, B, C, and D). A few
@@ -227,30 +224,113 @@ carbon abatement (i.e. that there are no local pollutants that are affected by c
 Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half.
 For each of the policy options listed below, derive: 
 
-a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus
+####a. Cap on carbon. 
+Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus
 reducing total emissions from 600 down to 300).
 Current carbon emissions in the sectors are: (A=180, B=200, C=220)
-(1) the total cost of meeting the target in country X
-
-Capped emmsions:
-A:80
-B:100
-C:120
 
 
+```{r}
+#Sector A
+costa_100 <- curve_a(100) #49 mc
+areaa_100 <- integrate(curve_a, lower = 0, upper = 100)$value
+
+#Sector B
+costb_100 <- curve_b(100) #29.2 mc
+areab_100 <- integrate(curve_b, lower = 0, upper = 100)$value
+
+#Sector C
+costc_100 <- curve_c(100) #66.7 mc
+areac_100 <- integrate(curve_c, lower = 0, upper = 100)$value
+
+#Sector D not part of this Q
 
 
-(2) the cost (or benefit) to each sector
+#Total Cost:
+tc_100 <- areaa_100 + areab_100 + areac_100 #6698.88
 
-(3) the tax revenue generated. 
 
-- Tax Revenue = 0
+```
 
-b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to
-find the tax that accomplishes the desired reduction.
-(1) the total cost of meeting the target in country X,
-(2) the cost (or benefit) to each sector
-(3) the tax revenue generated.
+#####(1) the total cost of meeting the target in country X
+
+$Total~Cost = `r round(tc_100, digits = 6)`$
+
+#####(2) the cost (or benefit) to each sector
+
+$Cost~to~A = `r round(areaa_100)`$
+
+$Cost~to~B = `r round(areab_100)`$
+
+$Cost~to~C = `r round(areac_100)`$
+
+#####(3) the tax revenue generated. 
+
+Tax Revenue = 0
+
+
+
+####b. Tax on carbon. 
+To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.
+
+Emission functions:
+$$Aggregate MC= 616.74 - Emissions / 8$$
+$$Abatement_A = ( 95.75 - MC)/0.58 $$
+$$Abatement_B = (49.32-MC)/ 0.2 $$
+$$Abatement_C =(159.94-MC)/0.78 $$
+$$Abatement_D = (87.69 - MC)/0.26$$
+See Table!
+```{r, echo=FALSE}
+
+#ok so first we need to find the aggregate marginal cost curve for sectors A, B, and C
+
+
+#step 1: rearrange!
+
+q_a <- function(x){(x-int_a)/slope_a}
+q_b <- function(x){(x-int_b)/slope_b}
+q_c <- function(x){(x-int_c)/slope_c}
+
+#Step 2: add functions 
+q_ag <- function(x){q_a(x) + q_b(x) + q_c(x)}
+#ok this was a mistake. Using Bridget's code for this part. 
+
+MC<-(616.74-300) /8
+Qa<-( 95.75 - 0)/0.58
+Qb<-(49.32-0)/ 0.2
+Qc<-(159.94-0)/0.78
+
+abatea<-(95.75 - MC)/0.58 
+abateb<-(49.32-MC)/ 0.2
+abatec<-(159.94-MC)/0.78
+totalabate<-sum(abatea, abateb, abatec)
+
+
+abate<-rbind(abatea, abateb, abatec, totalabate)
+
+taxa<-abatea*MC
+taxb<-abateb*MC
+taxc<-abatec*MC
+totaltax<-sum(taxa, taxb, taxc)
+
+tax<-rbind(taxa, taxb, taxc, totaltax)
+
+costa<-MC*(Qa-abatea)*0.5
+costb<-MC*(Qb-abateb)*0.5
+costc<-MC*(Qc-abatec)*0.5
+totalcost<-sum(costa, costb, costc)
+cost<-rbind(costa, costb, costc, totalcost)
+
+partb<- cbind(abate, cost,tax)
+colnames(partb)=c("Units abated", "Cost","Tax")
+row.names(partb)=c("Sector A", "Sector B", "Sector C", "Total Country X")
+partb
+round(partb,2)
+
+
+```
+
+
 
 c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions
 minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three
@@ -259,3 +339,91 @@ trading.
 (1) the total cost of meeting the target in country X,
 (2) the cost (or benefit) to each sector
 (3) the tax revenue generated.
+
+
+Equimarginal principle: firms will trade until the cost of abatement is the same between all 3 sectors. The goal is to abate 300 units of emissions, so the cost of abatement that meets the equimarginal principle is $39.59. Table below summarizes results.
+
+```{r, echo=FALSE}
+MC<-(616.74-300) /8
+
+abatea<-( 95.75 - MC)/0.58 
+abateb<-(49.32-MC)/ 0.2
+abatec<-(159.94-MC)/0.78
+totalabate<-sum(abatea, abateb, abatec)
+
+abate<-rbind(abatea, abateb, abatec, totalabate)
+
+costa<-(abatea*MC)+(abatea*(95.97-MC)*0.5)
+costb<-(abateb*MC)+(abateb*(49.32-MC)*0.5)
+costc<-(abatec*MC)+(abatec*(159.94-MC)*0.5)
+totalcost<-sum(costa, costb, costc)
+cost<-rbind(costa, costb, costc, totalcost)
+
+
+partc<- cbind(abate, cost)
+colnames(partc)=c("Units abated", "Cost")
+row.names(partc)=c("Sector A", "Sector B", "Sector C", "Total Country X")
+partc
+
+round(partc, 1)
+```
+
+###4. 
+Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. 
+
+#####Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? 
+
+Sector Y might benefit from entering the international carbon market since their abatement costs are lower than Sectors A and C, so it could potentially be profitable. 
+
+#####Are there any incentives for country X to try to attract country Y into its market?
+
+Sector B would benefit from country Y entering the international carbon market since their abatements costs are lower, so it could potentially be profitable.
+
+###5. 
+Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted.
+Assume there are no local air pollution regulations in either country X or country Y.
+
+####a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
+Both are emitting 300 tons, so both countires would also emit 300 tons of air polluntion. 
+
+####b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
+
+$Aggregate MC= 954.01 - Abatement / 11.85$
+```{r}
+MC<-(954.01-600) /11.85
+MC #29.87
+300-222 #78
+
+(87.69 - 39.59)/0.26
+abatea<-(95.75 - MC)/0.58 
+abateb<-(49.32-MC)/ 0.2
+abatec<-(159.94-MC)/0.78
+abated<-(87.69 - MC)/0.26
+
+totalabate<-sum(abatea, abateb, abatec, abated)
+abate<-rbind(abatea, abateb, abatec, abated, totalabate)
+abate
+
+
+costa<-(abatea*MC)+(abatea*(95.97-MC)*0.5)
+costb<-(abateb*MC)+(abateb*(49.32-MC)*0.5)
+costc<-(abatec*MC)+(abatec*(159.94-MC)*0.5)
+costd<-(abated*MC)+(abated*(87.69-MC)*0.5)
+
+totalcost<-sum(costa, costb, costc, costd)
+cost<-rbind(costa, costb, costc, costd, totalcost)
+
+part5<- cbind(abate, cost)
+colnames(part5)=c("Units abated", "Cost")
+row.names(part5)=c("Sector A", "Sector B", "Sector C", "Sector D","Total")
+part5
+
+round(part5,2)
+```
+If country Y enters the international carbon market this would change the cost of abatement to $29.87. Country Y would pollute 222 tons and Country X would pollute 378, and they same amount of emiisions. 600 tons in total, but more in Country X and less than Country Y. Country Y is better off in this regard. 
+
+
+####c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
+
+
+Not a great deal for country y, but it could be a good deal for country Y. 
