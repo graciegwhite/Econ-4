@@ -327,6 +327,10 @@ row.names(partb)=c("Sector A", "Sector B", "Sector C", "Total Country X")
 partb
 round(partb,2)
 
+partb_df <- as.data.frame(partb)
+
+kable(round(partb_df,1), caption = "Taxation Option") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F)
 
 ```
 
@@ -366,6 +370,12 @@ row.names(partc)=c("Sector A", "Sector B", "Sector C", "Total Country X")
 partc
 
 round(partc, 1)
+
+
+partc_df <- as.data.frame(partc)
+
+kable(round(partc_df,1), caption = "Cap and Trade Option") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 
 ###4. 
@@ -419,6 +429,11 @@ row.names(part5)=c("Sector A", "Sector B", "Sector C", "Sector D","Total")
 part5
 
 round(part5,2)
+
+part5_df <- as.data.frame(part5)
+
+kable(round(part5_df,1), caption = "International Cap and Trade") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 If country Y enters the international carbon market this would change the cost of abatement to $29.87. Country Y would pollute 222 tons and Country X would pollute 378, and they same amount of emiisions. 600 tons in total, but more in Country X and less than Country Y. Country Y is better off in this regard. 
 
